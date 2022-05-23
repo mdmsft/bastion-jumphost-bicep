@@ -30,6 +30,6 @@ jobs:
         with:
           inlineScript: |
             ids=`az vm list --query "[?tags.product=='${{ github.event.inputs.productName }}'].id" -o tsv`
-            if [[ -n "${ids}" ]] then
+            if [[ -n "${ids}" ]]; then
               az vm delete --ids "${ids}" -y
             fi
