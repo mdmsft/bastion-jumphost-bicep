@@ -1,0 +1,42 @@
+name: Create jumphost
+
+on:
+  workflow_dispatch:
+    inputs:
+      resourceGroupName:
+        required: true
+        description: Resource group name
+      productName:
+        required: true
+        description: Product name
+      ssh:
+        required: true
+        description: Public SSH key data (base64)
+
+permissions:
+  id-token: write
+
+jobs:
+  build:
+    name: Provision Azure Infrastructure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login with service principal
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Apply bicep template
+        uses: azure/cli@v1
+        with:
+          inlineScript: |
+            az deployment group create \
+            -g ${{ inputs.resourceGroupName }} \
+            -f main.bicep \
+            -p product=${{ inputs.productName }} \
+            -p sshKeyData=${{ inputs.ssh }}

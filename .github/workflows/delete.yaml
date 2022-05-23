@@ -1,0 +1,35 @@
+name: Delete jumphost
+
+on:
+  workflow_dispatch:
+    inputs:
+      resourceGroupName:
+        required: true
+        description: Resource group name
+      productName:
+        required: true
+        description: Product name
+
+permissions:
+  id-token: write
+
+jobs:
+  build:
+    name: Delete jumphost
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login with service principal
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Delete jumphost
+        uses: azure/cli@v1
+        with:
+          inlineScript: |
+            ids=`az vm list --query "[?tags.product=='${{ inputs.productName }}'].id" -o tsv`
+            if [[ -n "${ids}" ]] then
+              az vm delete --ids "${ids}" -y
+            fi
