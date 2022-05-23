@@ -2,7 +2,7 @@ name: Cleanup jumphosts
 
 on:
   schedule:
-    - cron: 0 * * * *
+    - cron: 0,15,30,45 * * * *
 
 env:
   RESOURCE_GROUP_NAME: rg-contoso-dev-weu
