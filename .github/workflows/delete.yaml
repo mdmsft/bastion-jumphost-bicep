@@ -29,7 +29,7 @@ jobs:
         uses: azure/cli@v1
         with:
           inlineScript: |
-            ids=`az vm list --query "[?tags.product=='${{ inputs.productName }}'].id" -o tsv`
+            ids=`az vm list --query "[?tags.product=='${{ github.event.inputs.productName }}'].id" -o tsv`
             if [[ -n "${ids}" ]] then
               az vm delete --ids "${ids}" -y
             fi

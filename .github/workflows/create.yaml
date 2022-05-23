@@ -36,7 +36,7 @@ jobs:
         with:
           inlineScript: |
             az deployment group create \
-            -g ${{ inputs.resourceGroupName }} \
+            -g ${{ github.event.inputs.resourceGroupName }} \
             -f main.bicep \
-            -p product=${{ inputs.productName }} \
-            -p sshKeyData=${{ inputs.ssh }}
+            -p product=${{ github.event.inputs.productName }} \
+            -p sshKeyData=${{ github.event.inputs.ssh }}
