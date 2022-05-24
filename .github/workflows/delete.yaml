@@ -29,7 +29,9 @@ jobs:
         uses: azure/cli@v1
         with:
           inlineScript: |
-            ids=`az vm list --query "[?tags.product=='${{ github.event.inputs.productName }}'].id" -o tsv`
-            if [[ -n "${ids}" ]]; then
-              az vm delete --ids "${ids}" -y
+            vmIds=`az vm list --query "[?tags.product=='${{ github.event.inputs.productName }}'].id" -o tsv`
+            nicIds=`az network nic list --query "[?tags.product=='${{ github.event.inputs.productName }}'].id" -o tsv`
+            if [[ -n "${vmIds}" && -n "${nicIds}" ]]; then
+              az vm delete --ids "${vmIds}" -y
+              az network nic delete --ids "${nicIds}" -y
             fi

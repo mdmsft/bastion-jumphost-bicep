@@ -26,7 +26,9 @@ jobs:
         uses: azure/cli@v1
         with:
           inlineScript: |
-            ids=`az vm list -g ${{ env.RESOURCE_GROUP_NAME }} --query "[?contains(keys(tags), 'product')].id" -o tsv`
-            if [[ -n "${ids}" ]]; then
-              az vm delete --ids "${ids}" -y
+            vmIds=`az vm list -g ${{ env.RESOURCE_GROUP_NAME }} --query "[?contains(keys(tags), 'product')].id" -o tsv`
+            nicIds=`az network nic list -g ${{ env.RESOURCE_GROUP_NAME }} --query "[?contains(keys(tags), 'product')].id" -o tsv`
+            if [[ -n "${vmIds}" && -n "${nicIds}" ]]; then
+              az vm delete --ids "${vmIds}" -y
+              az network nic delete --ids "${nicIds}" -y
             fi
