@@ -86,21 +86,7 @@ resource virtualMachine 'Microsoft.Compute/virtualMachines@2021-11-01' = {
       ]
     }
   }
-  identity: {
-    type: 'SystemAssigned'
-  }
   tags: {
     product: product 
-  }
-}
-
-var readerRoleDefinitionId = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')
-
-resource roleAssignmentResourceGroupReader 'Microsoft.Authorization/roleAssignments@2020-10-01-preview' = {
-  name: guid(resourceGroup().name, virtualMachine.name, readerRoleDefinitionId)
-  scope: resourceGroup()
-  properties: {
-    principalId: virtualMachine.identity.principalId
-    roleDefinitionId: readerRoleDefinitionId
   }
 }
