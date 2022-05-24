@@ -33,5 +33,5 @@ jobs:
             nicIds=`az network nic list --query "[?tags.product=='${{ github.event.inputs.productName }}'].id" -o tsv`
             if [[ -n "${vmIds}" && -n "${nicIds}" ]]; then
               az vm delete --ids "${vmIds}" -y
-              az network nic delete --ids "${nicIds}" -y
+              az network nic delete --ids "${nicIds}"
             fi
